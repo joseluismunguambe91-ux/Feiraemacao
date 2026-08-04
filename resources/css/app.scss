@@ -1,0 +1,132 @@
+// Paleta e tipografia da Etapa 6 (docs/06-design.md), mapeadas para as
+// variáveis de configuração do Bootstrap 5 — a cor de marca não é aplicada
+// por cima do Bootstrap, é a base a partir da qual ele é compilado.
+$milho: #ffc42b;
+$brasa: #e85d2c;
+$brasa-strong: #c1451c;
+$capim: #256b44;
+$ambar: #8a5a0e;
+$tijolo: #7a2415;
+$tinta: #241b10;
+$papel: #fffefb;
+$cinza-claro: #f2f4ee;
+$linha: #e3e0d3;
+
+$primary: $milho;
+$secondary: $brasa;
+$success: $capim;
+$warning: $ambar;
+$danger: $tijolo;
+$light: $cinza-claro;
+$dark: $tinta;
+
+$body-bg: $papel;
+$body-color: $tinta;
+$border-color: $linha;
+$link-color: $brasa-strong;
+$link-hover-color: darken($brasa-strong, 8%);
+
+$font-family-sans-serif: 'Karla Text', 'Segoe UI', system-ui, sans-serif;
+$headings-font-family: 'Fraunces Display', Georgia, serif;
+$headings-font-weight: 600;
+
+// Garante que o Bootstrap escolhe automaticamente texto escuro sobre o
+// Milho/Âmbar quando o branco não cumprir AA (ver docs/06-design.md, secção 2).
+$min-contrast-ratio: 4.5;
+
+@import 'bootstrap/scss/bootstrap';
+
+@font-face {
+    font-family: 'Fraunces Display';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('/fonts/fraunces-semibold600.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Fraunces Display';
+    font-style: italic;
+    font-weight: 500;
+    font-display: swap;
+    src: url('/fonts/fraunces-italic500.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Karla Text';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url('/fonts/karla-variable.woff2') format('woff2');
+}
+
+// --- /painel: sidebar clara (decisão da Etapa 6 — não escura tipo AdminLTE) ---
+.painel-sidebar {
+    width: 15rem;
+    min-height: 100vh;
+    background: $papel;
+    border-right: 1px solid $linha;
+}
+.painel-sidebar .app-logo {
+    font-family: $headings-font-family;
+    font-weight: 600;
+}
+.painel-sidebar .nav-link {
+    color: $body-color;
+    font-weight: 700;
+    border-radius: 0.5rem;
+}
+.painel-sidebar .nav-link.active {
+    background: $milho;
+    color: $tinta;
+}
+
+// --- Badges de estado semântico (Etapa 6 e 7 — separado da cor de marca) ---
+.badge-capim {
+    background-color: rgba($capim, 0.12);
+    color: $capim;
+}
+.badge-ambar {
+    background-color: rgba($ambar, 0.12);
+    color: $ambar;
+}
+.badge-tijolo {
+    background-color: rgba($tijolo, 0.12);
+    color: $tijolo;
+}
+.badge-neutro {
+    background-color: $linha;
+    color: $tinta;
+}
+
+// --- Cartão de estatística do dashboard ---
+.stat-tile {
+    border: 1px solid $linha;
+    border-left: 4px solid $milho;
+    border-radius: 0.5rem;
+    padding: 1rem 1.15rem;
+    background: $papel;
+}
+.stat-tile .num {
+    font-family: $headings-font-family;
+    font-weight: 600;
+    font-size: 1.9rem;
+    font-variant-numeric: tabular-nums;
+    display: block;
+}
+.stat-tile .lbl {
+    font-size: 0.8rem;
+    color: $tinta;
+    opacity: 0.65;
+}
+
+// --- Grelha de cartões (mapa de stands) ---
+.stand-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+    gap: 0.85rem;
+}
+
+// --- Hero da página pública (Etapa 6 — gradiente milho→brasa, texto tinta) ---
+.hero-publico {
+    background: linear-gradient(135deg, $milho 0%, $milho 42%, $brasa 100%);
+    color: $tinta;
+}
