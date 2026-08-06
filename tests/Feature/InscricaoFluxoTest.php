@@ -98,6 +98,33 @@ class InscricaoFluxoTest extends TestCase
         $this->assertDatabaseCount('inscricoes', 0);
     }
 
+    public function test_aluno_com_turma_direta_na_conta_submete_sem_depender_de_professor(): void
+    {
+        Notification::fake();
+
+        $feira = Feira::factory()->publicada()->create();
+        $aluno = $this->criarAluno(['turma' => '10B']);
+        $comissao = $this->criarComissao();
+
+        $response = $this->actingAs($aluno)->post('/professor/inscricoes', [
+            'tipo_participante' => 'aluno',
+            'telefone' => '841234567',
+            'email' => 'aluno@teste.local',
+            'tipo_atividade' => 'poesia',
+            'numero_participantes' => 1,
+        ]);
+
+        $response->assertRedirect('/professor/inscricoes');
+        $this->assertDatabaseHas('inscricoes', [
+            'feira_id' => $feira->id,
+            'professor_id' => $aluno->id,
+            'turma' => '10B',
+            'estado' => 'pendente',
+        ]);
+
+        Notification::assertSentTo($comissao, NovaInscricaoSubmetida::class);
+    }
+
     public function test_professor_inscreve_em_nome_de_alunos_do_proprio_plantel(): void
     {
         Notification::fake();

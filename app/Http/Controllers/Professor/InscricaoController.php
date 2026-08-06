@@ -20,11 +20,14 @@ use Illuminate\View\View;
  * Etapa 10 — ver docs/10-documentacao.md); `professor_id` guarda sempre
  * quem submeteu, independentemente do papel.
  *
- * Quando a inscrição é em nome de Aluno(s) (RF04, revisto após a Etapa 10):
- * o Professor escolhe do seu próprio plantel (Professor\AlunoController); o
- * Aluno, ao inscrever-se a si próprio, resolve-se automaticamente via
- * User::alunoLigado() — nunca escolhe manualmente. A turma deixa de ser
- * texto livre nestes casos, vem sempre do registo do Aluno.
+ * Quando a inscrição é em nome de Aluno(s) (RF04, revisto após a Etapa 10,
+ * e simplificado outra vez pouco depois — ver docs): o Professor continua a
+ * poder escolher do seu próprio plantel (Professor\AlunoController), mas o
+ * Aluno já não depende disso — se o Administrador já lhe pôs uma turma
+ * diretamente na conta (Utilizadores), inscreve-se sozinho de imediato.
+ * `User::alunoLigado()` continua a ter prioridade quando existe (liga a um
+ * registo de Aluno concreto, útil para o relatório de participantes); na
+ * ausência dele, cai-se para `User::turma`.
  */
 class InscricaoController extends Controller
 {
@@ -87,8 +90,12 @@ class InscricaoController extends Controller
             $dados[$campo] = $request->boolean($campo);
         }
         $dados['produto_foto_path'] = $this->guardarFotoDoProduto($request);
-        if ($dados['tipo_participante'] === 'aluno' && $alunoIds) {
-            $dados['turma'] = Aluno::find($alunoIds[0])?->turma;
+        if ($dados['tipo_participante'] === 'aluno') {
+            if ($alunoIds) {
+                $dados['turma'] = Aluno::find($alunoIds[0])?->turma;
+            } elseif ($request->user()->hasRole('aluno')) {
+                $dados['turma'] = $request->user()->turma;
+            }
         }
 
         $inscricao = Inscricao::create($dados);
@@ -141,8 +148,12 @@ class InscricaoController extends Controller
         if ($novaFoto = $this->guardarFotoDoProduto($request)) {
             $dados['produto_foto_path'] = $novaFoto;
         }
-        if ($dados['tipo_participante'] === 'aluno' && $alunoIds) {
-            $dados['turma'] = Aluno::find($alunoIds[0])?->turma;
+        if ($dados['tipo_participante'] === 'aluno') {
+            if ($alunoIds) {
+                $dados['turma'] = Aluno::find($alunoIds[0])?->turma;
+            } elseif ($request->user()->hasRole('aluno')) {
+                $dados['turma'] = $request->user()->turma;
+            }
         }
 
         $inscricao->update($dados);
@@ -154,7 +165,9 @@ class InscricaoController extends Controller
 
     private function alunoSemRegistoProprio(Request $request): bool
     {
-        return $request->user()->hasRole('aluno') && ! $request->user()->alunoLigado;
+        $user = $request->user();
+
+        return $user->hasRole('aluno') && ! $user->alunoLigado && ! $user->turma;
     }
 
     private function alunosDoProfessor(Request $request): \Illuminate\Support\Collection

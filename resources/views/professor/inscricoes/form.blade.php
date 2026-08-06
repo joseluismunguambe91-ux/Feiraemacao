@@ -18,8 +18,8 @@
     @if (auth()->user()->hasRole('aluno'))
         <input type="hidden" name="tipo_participante" value="aluno">
         <div class="alert alert-info small">
-            Esta inscrição fica associada a ti: <strong>{{ auth()->user()->alunoLigado?->nome }}</strong>
-            (turma {{ auth()->user()->alunoLigado?->turma }}).
+            Esta inscrição fica associada a ti: <strong>{{ auth()->user()->alunoLigado?->nome ?? auth()->user()->name }}</strong>
+            (turma {{ auth()->user()->alunoLigado?->turma ?? auth()->user()->turma }}).
         </div>
     @else
         <div class="mb-3">

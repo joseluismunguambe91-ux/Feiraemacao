@@ -32,6 +32,12 @@
     </div>
 
     <div class="mb-3">
+        <label for="turma" class="form-label">Turma <span class="text-body-secondary">(só para contas de Aluno — permite-lhe inscrever-se sozinho, sem passar por um Professor)</span></label>
+        <input id="turma" name="turma" class="form-control @error('turma') is-invalid @enderror" value="{{ old('turma', $utilizador->turma) }}">
+        @error('turma')<div class="invalid-feedback">{{ $message }}</div>@enderror
+    </div>
+
+    <div class="mb-3">
         <label for="password" class="form-label">
             Senha {{ $utilizador->exists ? '(deixa em branco para manter a atual)' : '' }}
         </label>

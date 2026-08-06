@@ -36,6 +36,27 @@ class UtilizadorTest extends TestCase
         $this->assertTrue($utilizador->hasRole('comissao'));
     }
 
+    public function test_administrador_cria_aluno_com_turma_direta(): void
+    {
+        $admin = $this->criarAdministrador();
+        $papelAluno = Role::firstOrCreate(['slug' => 'aluno'], ['nome' => 'Aluno']);
+
+        $response = $this->actingAs($admin)->post('/admin/utilizadores', [
+            'name' => 'Aluno Direto',
+            'email' => 'aluno.direto@teste.local',
+            'password' => 'senha1234',
+            'turma' => '9C',
+            'ativo' => 1,
+            'roles' => [$papelAluno->id],
+        ]);
+
+        $response->assertRedirect('/admin/utilizadores');
+
+        $utilizador = User::where('email', 'aluno.direto@teste.local')->first();
+        $this->assertNotNull($utilizador);
+        $this->assertSame('9C', $utilizador->turma);
+    }
+
     public function test_novo_utilizador_consegue_entrar_com_o_papel_atribuido(): void
     {
         $admin = $this->criarAdministrador();
