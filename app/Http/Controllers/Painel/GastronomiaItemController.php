@@ -14,7 +14,7 @@ class GastronomiaItemController extends Controller
     public function index(Request $request): View
     {
         $feira = $request->attributes->get('feiraAtual');
-        $itens = $feira ? $feira->gastronomiaItens()->with('inscricao.alunos')->orderBy('nome')->paginate(15) : null;
+        $itens = $feira ? $feira->gastronomiaItens()->with(['inscricao.alunos', 'inscricao.professor'])->orderBy('nome')->paginate(15) : null;
 
         return view('painel.gastronomia.index', compact('itens', 'feira'));
     }

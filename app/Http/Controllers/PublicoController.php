@@ -77,7 +77,7 @@ class PublicoController extends Controller
         $feira = $this->feiraPublica();
 
         $itens = $feira
-            ? $feira->gastronomiaItens()->with('inscricao.alunos')->orderBy('categoria')->orderBy('nome')->get()
+            ? $feira->gastronomiaItens()->with(['inscricao.alunos', 'inscricao.professor'])->orderBy('categoria')->orderBy('nome')->get()
             : collect();
 
         return view('publico.gastronomia', compact('feira', 'itens'));
