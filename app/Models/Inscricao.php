@@ -19,7 +19,7 @@ class Inscricao extends Model
     protected $table = 'inscricoes';
 
     protected $fillable = [
-        'feira_id', 'professor_id', 'tipo_participante', 'turma', 'telefone', 'email',
+        'feira_id', 'professor_id', 'tipo_participante', 'turma', 'classe', 'telefone', 'email',
         'tipo_atividade', 'descricao', 'produto_nome', 'produto_preco', 'produto_foto_path', 'numero_participantes',
         'necessita_palco', 'necessita_eletricidade', 'necessita_projetor', 'necessita_som',
         'numero_mesas', 'numero_cadeiras', 'horario_pretendido', 'duracao_minutos',

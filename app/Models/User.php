@@ -22,6 +22,7 @@ class User extends Authenticatable
         'password',
         'telefone',
         'turma',
+        'classe',
         'avatar_path',
         'ativo',
     ];

@@ -22,6 +22,7 @@ class AlunoRequest extends FormRequest
     {
         return [
             'nome' => ['required', 'string', 'max:150'],
+            'classe' => ['nullable', 'string', 'max:20'],
             'turma' => ['required', 'string', 'max:50'],
             'user_id' => [
                 'nullable',

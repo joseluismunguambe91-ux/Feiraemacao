@@ -17,9 +17,13 @@
     <h2 class="h6 text-uppercase text-body-secondary mt-4">Dados do responsável</h2>
     @if (auth()->user()->hasRole('aluno'))
         <input type="hidden" name="tipo_participante" value="aluno">
+        @php
+            $classeAtual = auth()->user()->alunoLigado?->classe ?? auth()->user()->classe;
+            $turmaAtual = auth()->user()->alunoLigado?->turma ?? auth()->user()->turma;
+        @endphp
         <div class="alert alert-info small">
             Esta inscrição fica associada a ti: <strong>{{ auth()->user()->alunoLigado?->nome ?? auth()->user()->name }}</strong>
-            (turma {{ auth()->user()->alunoLigado?->turma ?? auth()->user()->turma }}).
+            ({{ $classeAtual ? $classeAtual.' classe, ' : '' }}turma {{ $turmaAtual }}).
         </div>
     @else
         <div class="mb-3">
@@ -43,7 +47,7 @@
                         <div class="col-6 form-check">
                             <input type="checkbox" name="alunos[]" value="{{ $aluno->id }}" class="form-check-input" id="aluno_{{ $aluno->id }}"
                                    {{ in_array($aluno->id, $alunosSelecionados) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="aluno_{{ $aluno->id }}">{{ $aluno->nome }} ({{ $aluno->turma }})</label>
+                            <label class="form-check-label" for="aluno_{{ $aluno->id }}">{{ $aluno->nome }} ({{ $aluno->classe ? $aluno->classe.' ' : '' }}{{ $aluno->turma }})</label>
                         </div>
                     @endforeach
                 </div>

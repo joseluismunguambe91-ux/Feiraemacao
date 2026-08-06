@@ -12,7 +12,7 @@ class Aluno extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['nome', 'turma', 'professor_id', 'user_id'];
+    protected $fillable = ['nome', 'classe', 'turma', 'professor_id', 'user_id'];
 
     public function professor(): BelongsTo
     {

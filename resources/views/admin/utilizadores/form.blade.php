@@ -31,11 +31,19 @@
         @error('telefone')<div class="invalid-feedback">{{ $message }}</div>@enderror
     </div>
 
-    <div class="mb-3">
-        <label for="turma" class="form-label">Turma <span class="text-body-secondary">(só para contas de Aluno — permite-lhe inscrever-se sozinho, sem passar por um Professor)</span></label>
-        <input id="turma" name="turma" class="form-control @error('turma') is-invalid @enderror" value="{{ old('turma', $utilizador->turma) }}">
-        @error('turma')<div class="invalid-feedback">{{ $message }}</div>@enderror
+    <div class="row g-3 mb-3">
+        <div class="col-6">
+            <label for="classe" class="form-label">Classe <span class="text-body-secondary">(ex.: 9ª)</span></label>
+            <input id="classe" name="classe" class="form-control @error('classe') is-invalid @enderror" value="{{ old('classe', $utilizador->classe) }}">
+            @error('classe')<div class="invalid-feedback">{{ $message }}</div>@enderror
+        </div>
+        <div class="col-6">
+            <label for="turma" class="form-label">Turma <span class="text-body-secondary">(ex.: C)</span></label>
+            <input id="turma" name="turma" class="form-control @error('turma') is-invalid @enderror" value="{{ old('turma', $utilizador->turma) }}">
+            @error('turma')<div class="invalid-feedback">{{ $message }}</div>@enderror
+        </div>
     </div>
+    <div class="form-text mb-3 mt-n2">Classe/Turma só são necessárias para contas de Aluno — permitem-lhe inscrever-se sozinho, sem passar por um Professor.</div>
 
     <div class="mb-3">
         <label for="password" class="form-label">

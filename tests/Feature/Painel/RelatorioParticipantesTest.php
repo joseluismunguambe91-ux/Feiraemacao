@@ -35,14 +35,15 @@ class RelatorioParticipantesTest extends TestCase
         $stand = Stand::factory()->create(['feira_id' => $feira->id]);
 
         // Inscrição de gastronomia em nome de dois alunos, já aprovada com stand.
-        $aluno1 = Aluno::factory()->create(['professor_id' => $professor->id, 'turma' => '9C']);
-        $aluno2 = Aluno::factory()->create(['professor_id' => $professor->id, 'turma' => '9C']);
+        $aluno1 = Aluno::factory()->create(['professor_id' => $professor->id, 'classe' => '9ª', 'turma' => '9C']);
+        $aluno2 = Aluno::factory()->create(['professor_id' => $professor->id, 'classe' => '9ª', 'turma' => '9C']);
         $inscricaoGastronomia = Inscricao::factory()->aprovada()->create([
             'feira_id' => $feira->id,
             'professor_id' => $professor->id,
             'tipo_participante' => 'aluno',
             'tipo_atividade' => 'gastronomia',
             'turma' => '9C',
+            'produto_nome' => 'Matapa com Camarão',
         ]);
         $inscricaoGastronomia->alunos()->sync([$aluno1->id, $aluno2->id]);
         $inscricaoGastronomia->expositor()->create([
@@ -79,7 +80,9 @@ class RelatorioParticipantesTest extends TestCase
         $this->assertStringContainsString($aluno1->nome, $csv);
         $this->assertStringContainsString($aluno2->nome, $csv);
         $this->assertStringContainsString('Aluno', $csv);
+        $this->assertStringContainsString('9ª', $csv);
         $this->assertStringContainsString($stand->numero, $csv);
+        $this->assertStringContainsString('Matapa com Camarão', $csv);
         $this->assertStringContainsString($professor->name, $csv);
         $this->assertStringContainsString('Professor', $csv);
         $this->assertStringContainsString('Dança', $csv);

@@ -17,6 +17,7 @@ class AlunoFactory extends Factory
     {
         return [
             'nome' => fake()->name(),
+            'classe' => fake()->randomElement(['9ª', '10ª', '11ª']),
             'turma' => fake()->randomElement(['9A', '9B', '9C', '10A', '10B', '11A']),
             'professor_id' => User::factory(),
         ];

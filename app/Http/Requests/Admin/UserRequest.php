@@ -25,8 +25,9 @@ class UserRequest extends FormRequest
             'name' => ['required', 'string', 'max:150'],
             'email' => ['required', 'email', 'max:190', Rule::unique('users', 'email')->ignore($utilizador)],
             'telefone' => ['nullable', 'string', 'max:30'],
-            // Só relevante para contas de Aluno que se inscrevem sozinhas,
+            // Só relevantes para contas de Aluno que se inscrevem sozinhas,
             // sem passar por um plantel registado por um Professor.
+            'classe' => ['nullable', 'string', 'max:20'],
             'turma' => ['nullable', 'string', 'max:50'],
             'password' => [$utilizador ? 'nullable' : 'required', 'string', 'min:8'],
             'ativo' => ['nullable', 'boolean'],

@@ -91,11 +91,7 @@ class InscricaoController extends Controller
         }
         $dados['produto_foto_path'] = $this->guardarFotoDoProduto($request);
         if ($dados['tipo_participante'] === 'aluno') {
-            if ($alunoIds) {
-                $dados['turma'] = Aluno::find($alunoIds[0])?->turma;
-            } elseif ($request->user()->hasRole('aluno')) {
-                $dados['turma'] = $request->user()->turma;
-            }
+            [$dados['classe'], $dados['turma']] = $this->derivarClasseETurma($request, $alunoIds);
         }
 
         $inscricao = Inscricao::create($dados);
@@ -149,11 +145,7 @@ class InscricaoController extends Controller
             $dados['produto_foto_path'] = $novaFoto;
         }
         if ($dados['tipo_participante'] === 'aluno') {
-            if ($alunoIds) {
-                $dados['turma'] = Aluno::find($alunoIds[0])?->turma;
-            } elseif ($request->user()->hasRole('aluno')) {
-                $dados['turma'] = $request->user()->turma;
-            }
+            [$dados['classe'], $dados['turma']] = $this->derivarClasseETurma($request, $alunoIds);
         }
 
         $inscricao->update($dados);
@@ -191,6 +183,24 @@ class InscricaoController extends Controller
         }
 
         return array_map('intval', $request->input('alunos', []));
+    }
+
+    /**
+     * @return array{0: ?string, 1: ?string} [classe, turma]
+     */
+    private function derivarClasseETurma(Request $request, array $alunoIds): array
+    {
+        if ($alunoIds) {
+            $aluno = Aluno::find($alunoIds[0]);
+
+            return [$aluno?->classe, $aluno?->turma];
+        }
+
+        if ($request->user()->hasRole('aluno')) {
+            return [$request->user()->classe, $request->user()->turma];
+        }
+
+        return [null, null];
     }
 
     private function guardarFotoDoProduto(Request $request): ?string

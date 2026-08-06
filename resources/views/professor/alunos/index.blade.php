@@ -16,6 +16,7 @@
             <thead>
                 <tr>
                     <th>Nome</th>
+                    <th>Classe</th>
                     <th>Turma</th>
                     <th>Conta própria</th>
                     <th class="text-end">Ações</th>
@@ -25,6 +26,7 @@
                 @foreach ($alunos as $aluno)
                     <tr>
                         <td>{{ $aluno->nome }}</td>
+                        <td>{{ $aluno->classe ?? '—' }}</td>
                         <td>{{ $aluno->turma }}</td>
                         <td>{{ $aluno->user?->name ?? '—' }}</td>
                         <td class="text-end">

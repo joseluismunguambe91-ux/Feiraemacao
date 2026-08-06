@@ -83,13 +83,18 @@ class GerarRelatorioJob implements ShouldQueue
             ->with(['professor', 'alunos', 'expositor.stand'])
             ->get()
             ->flatMap(function (Inscricao $inscricao) use ($rotulosFuncao) {
-                $funcao = $rotulosFuncao[$inscricao->tipo_atividade] ?? $inscricao->tipo_atividade;
+                // Para gastronomia, "o que vai apresentar" é o prato em si
+                // (mais útil que só "Gastronomia" repetido em toda a linha).
+                $funcao = $inscricao->tipo_atividade === 'gastronomia'
+                    ? ($inscricao->produto_nome ?? 'Gastronomia')
+                    : ($rotulosFuncao[$inscricao->tipo_atividade] ?? $inscricao->tipo_atividade);
                 $banca = $inscricao->expositor?->stand?->numero;
 
                 if ($inscricao->tipo_participante === 'aluno' && $inscricao->alunos->isNotEmpty()) {
                     return $inscricao->alunos->map(fn ($aluno) => (object) [
                         'nome' => $aluno->nome,
                         'papel' => 'Aluno',
+                        'classe' => $aluno->classe,
                         'turma' => $aluno->turma,
                         'funcao' => $funcao,
                         'banca' => $banca,
@@ -99,6 +104,7 @@ class GerarRelatorioJob implements ShouldQueue
                 return [(object) [
                     'nome' => $inscricao->professor->name,
                     'papel' => $inscricao->tipo_participante === 'aluno' ? 'Aluno' : 'Professor',
+                    'classe' => $inscricao->classe,
                     'turma' => $inscricao->turma,
                     'funcao' => $funcao,
                     'banca' => $banca,
@@ -141,8 +147,8 @@ class GerarRelatorioJob implements ShouldQueue
     {
         return match ($this->relatorio->tipo) {
             'participantes' => array_merge(
-                [['Nome', 'Papel', 'Turma', 'Função', 'Banca']],
-                $dados->map(fn ($p) => [$p->nome, $p->papel, $p->turma, $p->funcao, $p->banca ?? '—'])->toArray(),
+                [['Nome', 'Papel', 'Classe', 'Turma', 'O que vai apresentar', 'Banca']],
+                $dados->map(fn ($p) => [$p->nome, $p->papel, $p->classe ?? '—', $p->turma ?? '—', $p->funcao, $p->banca ?? '—'])->toArray(),
             ),
             'atividades' => array_merge(
                 [['Título', 'Tipo', 'Estado', 'Participantes previstos']],
