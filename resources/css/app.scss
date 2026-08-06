@@ -132,10 +132,21 @@ $min-contrast-ratio: 4.5;
 
     // Quando a feira tem banner, o gradiente vira um véu escuro por cima da
     // foto (definido inline, ver publico/inicio.blade.php) — texto claro
-    // para se manter legível sobre qualquer imagem.
+    // para se manter legível sobre qualquer imagem. "contain" em vez de
+    // "cover" para a camada da foto: nunca corta nada do banner, mesmo em
+    // ecrãs estreitos (telemóvel) onde a proporção do ecrã não bate certo
+    // com a da imagem — a camada do gradiente continua a esticar-se sempre
+    // à caixa toda (100% 100%), só a foto é que se ajusta sem recortar.
     &--com-banner {
-        background-size: cover;
-        background-position: center;
+        background-color: $tinta;
+        background-repeat: no-repeat, no-repeat;
+        background-position: center, center;
+        background-size: 100% 100%, contain;
         color: #fff;
+        min-height: 260px;
+
+        @media (min-width: 768px) {
+            min-height: 380px;
+        }
     }
 }
