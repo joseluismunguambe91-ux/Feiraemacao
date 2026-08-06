@@ -59,11 +59,22 @@ $min-contrast-ratio: 4.5;
 }
 
 // --- /painel: sidebar clara (decisão da Etapa 6 — não escura tipo AdminLTE) ---
+// Em telemóvel (< lg, onde o layout empilha via flex-column no d-flex pai)
+// a sidebar tinha largura fixa de 15rem MAS min-height:100vh — ficava uma
+// faixa esguia do tamanho do ecrã inteiro antes do conteúdo real aparecer.
+// Corrigido: só assume a largura/altura fixas do ecrã grande a partir de lg,
+// que é exatamente onde o layout pai passa a flex-row (ver layouts/painel.blade.php).
 .painel-sidebar {
-    width: 15rem;
-    min-height: 100vh;
+    width: 100%;
     background: $papel;
-    border-right: 1px solid $linha;
+    border-bottom: 1px solid $linha;
+
+    @media (min-width: 992px) {
+        width: 15rem;
+        min-height: 100vh;
+        border-bottom: none;
+        border-right: 1px solid $linha;
+    }
 }
 .painel-sidebar .app-logo {
     font-family: $headings-font-family;
