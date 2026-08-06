@@ -129,4 +129,13 @@ $min-contrast-ratio: 4.5;
 .hero-publico {
     background: linear-gradient(135deg, $milho 0%, $milho 42%, $brasa 100%);
     color: $tinta;
+
+    // Quando a feira tem banner, o gradiente vira um véu escuro por cima da
+    // foto (definido inline, ver publico/inicio.blade.php) — texto claro
+    // para se manter legível sobre qualquer imagem.
+    &--com-banner {
+        background-size: cover;
+        background-position: center;
+        color: #fff;
+    }
 }

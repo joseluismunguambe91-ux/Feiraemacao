@@ -7,6 +7,9 @@
     <h1 class="h3 mb-4">Sobre a Feira</h1>
 
     @if ($feira)
+        @if ($feira->logotipo_path)
+            <img src="{{ \Illuminate\Support\Facades\Storage::url($feira->logotipo_path) }}" alt="Logótipo {{ $feira->tema }}" class="mb-3" style="max-height: 96px;">
+        @endif
         <p>{{ $feira->descricao ?? 'Ainda não há uma descrição publicada para esta edição.' }}</p>
         <dl class="row mt-4">
             <dt class="col-sm-4">Datas</dt>

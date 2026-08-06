@@ -4,10 +4,14 @@
 
 @section('conteudo')
 @if ($feira)
-    <section class="hero-publico py-5">
+    <section class="hero-publico py-5 {{ $feira->banner_path ? 'hero-publico--com-banner' : '' }}"
+        @if ($feira->banner_path) style="background-image: linear-gradient(135deg, rgba(36,27,16,.55), rgba(36,27,16,.25)), url('{{ \Illuminate\Support\Facades\Storage::url($feira->banner_path) }}');" @endif>
         <div class="container">
             <div class="row align-items-end g-4">
                 <div class="col-lg-8">
+                    @if ($feira->logotipo_path)
+                        <img src="{{ \Illuminate\Support\Facades\Storage::url($feira->logotipo_path) }}" alt="Logótipo {{ $feira->tema }}" class="mb-3" style="max-height: 64px;">
+                    @endif
                     <span class="fw-semibold">{{ $feira->data_inicio->format('d/m/Y') }} – {{ $feira->data_fim->format('d/m/Y') }} · {{ $feira->local }}</span>
                     <h1 class="display-6 mt-1 mb-3">{{ $feira->tema }}</h1>
                     <div class="d-flex gap-4 fw-semibold mb-4 flex-wrap">
