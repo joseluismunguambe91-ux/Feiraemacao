@@ -3,11 +3,22 @@
 @section('titulo', 'Programação')
 
 @section('conteudo')
-<h1 class="h3 mb-4">Programação</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">Programação</h1>
+    @if ($feira)
+        <a href="{{ route('painel.atividades.create') }}" class="btn btn-primary">Nova atividade</a>
+    @endif
+</div>
 
 @if (! $feira)
     <div class="alert alert-warning">Seleciona uma edição da feira para gerir a programação.</div>
 @else
+    @if ($naoAgendadas->isEmpty() && $itens->isEmpty())
+        <div class="alert alert-info">
+            Ainda não há nenhuma atividade para agendar. Cria uma em <a href="{{ route('painel.atividades.create') }}">"Nova atividade"</a> (acima) — assim que existir, aparece aqui para lhe atribuíres data, hora e local. Atividades vindas de inscrições aprovadas também aparecem aqui automaticamente.
+        </div>
+    @endif
+
     @if ($naoAgendadas->isNotEmpty())
         <div class="border rounded p-3 mb-4">
             <h2 class="h6">Atividades por agendar</h2>
@@ -22,9 +33,9 @@
         </div>
     @endif
 
-    @if ($itens->isEmpty())
+    @if ($itens->isEmpty() && $naoAgendadas->isNotEmpty())
         <p class="text-body-secondary">Ainda não há nada agendado nesta edição.</p>
-    @else
+    @elseif ($itens->isNotEmpty())
         @foreach ($itens->groupBy(fn ($item) => $item->data->format('Y-m-d')) as $dia => $itensDoDia)
             <h2 class="h6 text-uppercase text-body-secondary mt-4">{{ \Carbon\Carbon::parse($dia)->format('d/m/Y') }}</h2>
             <div class="table-responsive">

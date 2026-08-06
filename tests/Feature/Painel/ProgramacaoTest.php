@@ -18,6 +18,19 @@ class ProgramacaoTest extends TestCase
     use CriaUtilizadoresComPapel;
     use RefreshDatabase;
 
+    public function test_pagina_vazia_orienta_a_criar_uma_atividade(): void
+    {
+        $feira = Feira::factory()->create();
+        $comissao = $this->criarComissao();
+        $this->withSession(['feira_atual_id' => $feira->id]);
+
+        $response = $this->actingAs($comissao)->get('/painel/programacao');
+
+        $response->assertOk();
+        $response->assertSee('Ainda não há nenhuma atividade para agendar');
+        $response->assertSee(route('painel.atividades.create'), false);
+    }
+
     public function test_agenda_uma_atividade_sem_conflito(): void
     {
         $feira = Feira::factory()->create();
