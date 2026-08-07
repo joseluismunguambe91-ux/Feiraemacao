@@ -54,6 +54,28 @@
         </div>
     </footer>
 
+    <div id="avisoCookies" class="d-none position-fixed bottom-0 start-0 end-0 bg-dark text-white py-3 px-3" style="z-index: 1050;">
+        <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <p class="small mb-0">
+                Este site usa cookies essenciais para funcionar corretamente (sessão, segurança). Ao continuar a navegar, aceita a sua utilização.
+            </p>
+            <button type="button" id="aceitarCookies" class="btn btn-sm btn-light flex-shrink-0">Aceitar</button>
+        </div>
+    </div>
+    <script>
+        (function () {
+            var aviso = document.getElementById('avisoCookies');
+            if (! aviso) return;
+            if (! localStorage.getItem('cookies-aceites')) {
+                aviso.classList.remove('d-none');
+            }
+            document.getElementById('aceitarCookies').addEventListener('click', function () {
+                localStorage.setItem('cookies-aceites', '1');
+                aviso.classList.add('d-none');
+            });
+        })();
+    </script>
+
     @stack('scripts')
 </body>
 </html>

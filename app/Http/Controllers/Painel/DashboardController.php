@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Aluno;
 use App\Models\ProgramacaoItem;
 use App\Models\Role;
+use App\Models\Visita;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -30,6 +31,7 @@ class DashboardController extends Controller
             'atividades' => $feira->atividades()->count(),
             'professores' => Role::where('slug', 'professor')->first()?->users()->count() ?? 0,
             'alunos' => Aluno::query()->count(),
+            'visitantes' => Visita::where('feira_id', $feira->id)->count(),
         ];
 
         $inscricoesPorEstado = $feira->inscricoes()

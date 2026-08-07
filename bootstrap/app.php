@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => \App\Http\Middleware\EnsureUserHasRole::class,
             'feira.contexto' => \App\Http\Middleware\DefinirFeiraAtual::class,
+            'registar.visita' => \App\Http\Middleware\RegistarVisita::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 // RF28/RF29 (Etapa 1): página pública sem login, sempre a refletir a edição
 // publicada/em_curso (RN10) — nunca uma edição em rascunho.
-Route::name('publico.')->group(function () {
+Route::middleware('registar.visita')->name('publico.')->group(function () {
     Route::get('/', [PublicoController::class, 'inicio'])->name('inicio');
     Route::get('sobre', [PublicoController::class, 'sobre'])->name('sobre');
     Route::get('programacao', [PublicoController::class, 'programacao'])->name('programacao');

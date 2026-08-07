@@ -31,7 +31,7 @@ class RelatorioController extends Controller
         }
 
         $dados = $request->validate([
-            'tipo' => ['required', Rule::in(['participantes', 'atividades', 'expositores', 'gastronomia', 'programacao'])],
+            'tipo' => ['required', Rule::in(['participantes', 'atividades', 'expositores', 'gastronomia', 'programacao', 'visitantes'])],
             'formato' => ['required', Rule::in(['pdf', 'excel'])],
         ]);
 

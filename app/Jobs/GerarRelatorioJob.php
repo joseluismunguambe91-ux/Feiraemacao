@@ -8,6 +8,7 @@ use App\Models\GastronomiaItem;
 use App\Models\Inscricao;
 use App\Models\ProgramacaoItem;
 use App\Models\RelatorioGerado;
+use App\Models\Visita;
 use App\Notifications\RelatorioConcluido;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Bus\Queueable;
@@ -61,7 +62,19 @@ class GerarRelatorioJob implements ShouldQueue
             'expositores' => Expositor::where('feira_id', $feiraId)->with(['professor', 'stand'])->get(),
             'gastronomia' => GastronomiaItem::where('feira_id', $feiraId)->get(),
             'programacao' => ProgramacaoItem::where('feira_id', $feiraId)->with('atividade')->orderBy('data')->orderBy('hora_inicio')->get(),
+            'visitantes' => $this->visitantesPorDia($feiraId),
         };
+    }
+
+    /** Uma linha por dia, com o total de sessões distintas nesse dia (RegistarVisita). */
+    private function visitantesPorDia(int $feiraId): Collection
+    {
+        return Visita::where('feira_id', $feiraId)
+            ->selectRaw('data, count(*) as total')
+            ->groupBy('data')
+            ->orderBy('data')
+            ->get()
+            ->map(fn ($linha) => (object) ['data' => $linha->data, 'total' => $linha->total]);
     }
 
     /**
@@ -168,6 +181,10 @@ class GerarRelatorioJob implements ShouldQueue
                     $p->data->format('d/m/Y'), substr($p->hora_inicio, 0, 5), substr($p->hora_fim, 0, 5),
                     $p->atividade->titulo, $p->local, $p->palco,
                 ])->toArray(),
+            ),
+            'visitantes' => array_merge(
+                [['Data', 'Visitantes']],
+                $dados->map(fn ($v) => [$v->data->format('d/m/Y'), $v->total])->toArray(),
             ),
         };
     }

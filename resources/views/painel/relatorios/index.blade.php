@@ -18,6 +18,7 @@
                 <option value="expositores">Expositores</option>
                 <option value="gastronomia">Gastronomia</option>
                 <option value="programacao">Programação</option>
+                <option value="visitantes">Visitantes (por dia)</option>
             </select>
         </div>
         <div class="mb-3">

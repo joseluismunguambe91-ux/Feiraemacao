@@ -46,7 +46,7 @@
             <div class="stat-tile"><span class="num">{{ $stats['alunos'] }}</span><span class="lbl">Alunos</span></div>
         </div>
         <div class="col-6 col-md-3">
-            <div class="stat-tile"><span class="num">—</span><span class="lbl">Visitantes (fora do escopo atual)</span></div>
+            <div class="stat-tile"><span class="num">{{ $stats['visitantes'] }}</span><span class="lbl">Visitantes</span></div>
         </div>
     </div>
 
