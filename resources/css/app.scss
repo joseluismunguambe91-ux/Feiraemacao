@@ -108,6 +108,19 @@ $min-contrast-ratio: 4.5;
     color: $tinta;
 }
 
+// --- Aviso de destaque (ex.: condição de aprovação na inscrição) ---
+.aviso-destaque {
+    background: linear-gradient(135deg, rgba($milho, 0.18), rgba($brasa, 0.08));
+    border: 1px solid rgba($brasa, 0.3);
+    border-radius: 0.75rem;
+    padding: 1.1rem 1.35rem;
+}
+.aviso-destaque .titulo {
+    font-family: $headings-font-family;
+    font-weight: 600;
+    color: $brasa-strong;
+}
+
 // --- Cartão de estatística do dashboard ---
 .stat-tile {
     border: 1px solid $linha;

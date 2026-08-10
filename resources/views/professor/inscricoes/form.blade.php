@@ -4,7 +4,16 @@
 
 @section('conteudo')
 <h1 class="h3 mb-1">{{ $inscricao->exists ? 'Editar inscrição' : 'Nova inscrição' }}</h1>
-<p class="text-body-secondary mb-4">{{ $feira->tema }}</p>
+<p class="text-body-secondary mb-3">{{ $feira->tema }}</p>
+
+<div class="aviso-destaque mb-4">
+    <p class="titulo mb-1">Condição de aprovação: um livro para a biblioteca</p>
+    <p class="small mb-0">
+        Para a inscrição ser aprovada, é preciso entregar <strong>um livro na secretaria da escola</strong> —
+        cada participação ajuda a enriquecer a biblioteca escolar. Entrega-o o quanto antes, para a Comissão
+        Organizadora poder confirmar a tua participação.
+    </p>
+</div>
 
 <form method="POST"
       action="{{ $inscricao->exists ? route('professor.inscricoes.update', $inscricao) : route('professor.inscricoes.store') }}"
