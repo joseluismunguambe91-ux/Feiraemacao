@@ -104,7 +104,7 @@ class InscricaoController extends Controller
         Notification::send($comissao, new NovaInscricaoSubmetida($inscricao));
 
         return redirect()->route('professor.inscricoes.index')
-            ->with('sucesso', 'Inscrição submetida com sucesso. Aguarda aprovação da Comissão Organizadora.');
+            ->with('sucesso', 'Inscrição submetida com sucesso. Não te esqueças de entregar um livro na secretaria para a biblioteca da escola — é condição para a aprovação. Aguarda a avaliação da Comissão Organizadora.');
     }
 
     public function edit(Inscricao $inscricao): View|RedirectResponse
