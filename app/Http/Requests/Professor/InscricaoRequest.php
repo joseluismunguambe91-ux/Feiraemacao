@@ -65,4 +65,27 @@ class InscricaoRequest extends FormRequest
             'fotos.*' => ['nullable', 'image', 'max:4096'],
         ];
     }
+
+    /** Nomes amigáveis nas mensagens de erro — o formulário é pensado para crianças preencherem sozinhas. */
+    public function attributes(): array
+    {
+        return [
+            'tipo_participante' => 'quem vai participar',
+            'turma' => 'turma',
+            'alunos' => 'aluno(s)',
+            'telefone' => 'número de telefone',
+            'email' => 'email',
+            'tipo_atividade' => 'o que vais fazer',
+            'descricao' => 'descrição',
+            'produto_nome' => 'nome do prato',
+            'produto_preco' => 'preço',
+            'produto_foto' => 'foto do prato',
+            'numero_participantes' => 'número de participantes',
+            'numero_mesas' => 'número de mesas',
+            'numero_cadeiras' => 'número de cadeiras',
+            'horario_pretendido' => 'hora que preferes',
+            'duracao_minutos' => 'duração',
+            'observacoes' => 'observações',
+        ];
+    }
 }

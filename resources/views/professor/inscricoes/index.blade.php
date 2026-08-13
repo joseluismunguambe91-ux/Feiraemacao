@@ -3,13 +3,19 @@
 @section('titulo', 'As minhas inscrições')
 
 @section('conteudo')
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-2">
     <h1 class="h3 mb-0">As minhas inscrições</h1>
     <a href="{{ route('professor.inscricoes.create') }}" class="btn btn-primary">Nova inscrição</a>
 </div>
+<p class="text-body-secondary mb-4">
+    Aqui vês tudo o que já pediste para fazer na feira, e se já foi aceite.
+    <span class="badge badge-ambar">Pendente</span> significa que ainda estão a decidir;
+    <span class="badge badge-capim">Aprovada</span> significa que já podes preparar tudo;
+    <span class="badge badge-tijolo">Rejeitada</span> significa que não foi desta vez — lê o comentário para saber porquê.
+</p>
 
 @if ($inscricoes->isEmpty())
-    <p class="text-body-secondary">Ainda não submeteste nenhuma inscrição.</p>
+    <p class="text-body-secondary">Ainda não te inscreveste em nada. Clica em "Nova inscrição" para começares!</p>
 @else
     <div class="table-responsive">
         <table class="table align-middle">
