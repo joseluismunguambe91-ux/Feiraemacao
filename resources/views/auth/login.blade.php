@@ -33,5 +33,11 @@
             <a href="{{ route('password.request') }}" class="small">Esqueceste a senha?</a>
         </div>
     </form>
+
+    <div class="aviso-destaque mt-4 text-center">
+        <p class="titulo mb-1">És aluno e ainda não tens conta?</p>
+        <p class="small mb-3">Cria a tua própria conta em menos de um minuto — só precisas de um email e de inventares uma senha.</p>
+        <a href="{{ route('registar') }}" class="btn btn-outline-secondary btn-sm">Criar a minha conta</a>
+    </div>
 </div>
 @endsection
