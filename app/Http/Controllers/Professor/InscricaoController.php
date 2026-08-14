@@ -20,14 +20,15 @@ use Illuminate\View\View;
  * Etapa 10 — ver docs/10-documentacao.md); `professor_id` guarda sempre
  * quem submeteu, independentemente do papel.
  *
- * Quando a inscrição é em nome de Aluno(s) (RF04, revisto após a Etapa 10,
- * e simplificado outra vez pouco depois — ver docs): o Professor continua a
+ * Quando a inscrição é em nome de Aluno(s) (RF04, revisto após a Etapa 10 e
+ * simplificado mais duas vezes depois — ver docs): o Professor continua a
  * poder escolher do seu próprio plantel (Professor\AlunoController), mas o
- * Aluno já não depende disso — se o Administrador já lhe pôs uma turma
- * diretamente na conta (Utilizadores), inscreve-se sozinho de imediato.
- * `User::alunoLigado()` continua a ter prioridade quando existe (liga a um
- * registo de Aluno concreto, útil para o relatório de participantes); na
- * ausência dele, cai-se para `User::turma`.
+ * Aluno nunca precisa de nada disso — mesmo uma conta criada agora mesmo em
+ * `/registar`, sem turma nem professor nenhum, já consegue submeter. A
+ * turma fica em branco nesse caso (`derivarClasseETurma()`), a Comissão
+ * decide sem ela. `User::alunoLigado()` continua a ter prioridade quando
+ * existe (liga a um registo de Aluno concreto, útil para o relatório de
+ * participantes); na ausência dele, cai-se para `User::turma`.
  */
 class InscricaoController extends Controller
 {
@@ -53,11 +54,6 @@ class InscricaoController extends Controller
                 ->with('erro', 'Não há nenhuma edição da feira aberta a inscrições de momento.');
         }
 
-        if ($this->alunoSemRegistoProprio($request)) {
-            return redirect()->route('professor.inscricoes.index')
-                ->with('erro', 'A tua conta ainda não está associada a nenhum registo de aluno. Pede ao teu professor para te registar em "Os meus alunos" antes de te inscreveres.');
-        }
-
         return view('professor.inscricoes.form', [
             'inscricao' => new Inscricao(),
             'feira' => $feira,
@@ -72,11 +68,6 @@ class InscricaoController extends Controller
         if (! $feira) {
             return redirect()->route('professor.inscricoes.index')
                 ->with('erro', 'Não há nenhuma edição da feira aberta a inscrições de momento.');
-        }
-
-        if ($this->alunoSemRegistoProprio($request)) {
-            return redirect()->route('professor.inscricoes.index')
-                ->with('erro', 'A tua conta ainda não está associada a nenhum registo de aluno. Pede ao teu professor para te registar em "Os meus alunos" antes de te inscreveres.');
         }
 
         $dados = $request->validated();
@@ -153,13 +144,6 @@ class InscricaoController extends Controller
         $this->guardarFotos($request, $inscricao);
 
         return redirect()->route('professor.inscricoes.index')->with('sucesso', 'Inscrição atualizada.');
-    }
-
-    private function alunoSemRegistoProprio(Request $request): bool
-    {
-        $user = $request->user();
-
-        return $user->hasRole('aluno') && ! $user->alunoLigado && ! $user->turma;
     }
 
     private function alunosDoProfessor(Request $request): \Illuminate\Support\Collection

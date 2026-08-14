@@ -30,7 +30,11 @@
         @endphp
         <div class="alert alert-info small">
             Estás a inscrever-te como <strong>{{ auth()->user()->alunoLigado?->nome ?? auth()->user()->name }}</strong>
-            ({{ $classeAtual ? $classeAtual.' classe, ' : '' }}turma {{ $turmaAtual }}).
+            @if ($classeAtual || $turmaAtual)
+                ({{ $classeAtual ? $classeAtual.' classe, ' : '' }}turma {{ $turmaAtual }}).
+            @else
+                .
+            @endif
         </div>
     @else
         <h2 class="h6 text-uppercase text-body-secondary mt-4">Em nome de quem é esta inscrição?</h2>

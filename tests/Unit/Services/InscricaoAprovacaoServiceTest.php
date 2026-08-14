@@ -171,6 +171,36 @@ class InscricaoAprovacaoServiceTest extends TestCase
         Notification::assertSentTo($professor, InscricaoAvaliada::class);
     }
 
+    public function test_aprovar_gastronomia_de_aluno_sem_turma_nao_rebenta(): void
+    {
+        Notification::fake();
+
+        $feira = Feira::factory()->create();
+        $aluno = User::factory()->create();
+        $stand = Stand::factory()->create(['feira_id' => $feira->id]);
+        $inscricao = Inscricao::factory()->create([
+            'feira_id' => $feira->id,
+            'professor_id' => $aluno->id,
+            'tipo_participante' => 'aluno',
+            'tipo_atividade' => 'gastronomia',
+            'turma' => null,
+        ]);
+        $avaliador = User::factory()->create();
+
+        $this->service->aprovar($inscricao, $avaliador, [
+            'stand_id' => $stand->id,
+            'produto_nome' => 'Bolo de coco',
+            'produto_preco' => 80,
+        ]);
+
+        $this->assertSame('aprovada', $inscricao->fresh()->estado);
+        $this->assertDatabaseHas('expositores', [
+            'inscricao_id' => $inscricao->id,
+            'stand_id' => $stand->id,
+            'turma' => null,
+        ]);
+    }
+
     public function test_aprovar_gastronomia_bloqueia_stand_ja_ocupado(): void
     {
         $feira = Feira::factory()->create();

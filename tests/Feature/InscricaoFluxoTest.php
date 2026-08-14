@@ -81,9 +81,13 @@ class InscricaoFluxoTest extends TestCase
         Notification::assertSentTo($comissao, NovaInscricaoSubmetida::class);
     }
 
-    public function test_aluno_sem_registo_proprio_nao_consegue_submeter(): void
+    public function test_aluno_sem_turma_nem_professor_consegue_mesmo_assim_submeter(): void
     {
+        Notification::fake();
+
+        $feira = Feira::factory()->publicada()->create();
         $aluno = $this->criarAluno();
+        $comissao = $this->criarComissao();
 
         $response = $this->actingAs($aluno)->post('/professor/inscricoes', [
             'tipo_participante' => 'aluno',
@@ -94,8 +98,14 @@ class InscricaoFluxoTest extends TestCase
         ]);
 
         $response->assertRedirect('/professor/inscricoes');
-        $response->assertSessionHas('erro');
-        $this->assertDatabaseCount('inscricoes', 0);
+        $this->assertDatabaseHas('inscricoes', [
+            'feira_id' => $feira->id,
+            'professor_id' => $aluno->id,
+            'turma' => null,
+            'estado' => 'pendente',
+        ]);
+
+        Notification::assertSentTo($comissao, NovaInscricaoSubmetida::class);
     }
 
     public function test_aluno_com_turma_direta_na_conta_submete_sem_depender_de_professor(): void
