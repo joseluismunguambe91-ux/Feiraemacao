@@ -81,7 +81,24 @@ class InscricaoFluxoTest extends TestCase
         Notification::assertSentTo($comissao, NovaInscricaoSubmetida::class);
     }
 
-    public function test_aluno_sem_turma_nem_professor_consegue_mesmo_assim_submeter(): void
+    public function test_aluno_sem_plantel_tem_de_escrever_a_propria_turma(): void
+    {
+        Feira::factory()->publicada()->create();
+        $aluno = $this->criarAluno();
+
+        $semTurma = $this->actingAs($aluno)->post('/professor/inscricoes', [
+            'tipo_participante' => 'aluno',
+            'telefone' => '841234567',
+            'email' => 'aluno@teste.local',
+            'tipo_atividade' => 'poesia',
+            'numero_participantes' => 1,
+        ]);
+
+        $semTurma->assertSessionHasErrors('turma');
+        $this->assertDatabaseCount('inscricoes', 0);
+    }
+
+    public function test_aluno_sem_plantel_preenche_classe_e_turma_no_momento_da_inscricao(): void
     {
         Notification::fake();
 
@@ -91,6 +108,8 @@ class InscricaoFluxoTest extends TestCase
 
         $response = $this->actingAs($aluno)->post('/professor/inscricoes', [
             'tipo_participante' => 'aluno',
+            'classe' => '10ª',
+            'turma' => '10B',
             'telefone' => '841234567',
             'email' => 'aluno@teste.local',
             'tipo_atividade' => 'poesia',
@@ -101,33 +120,7 @@ class InscricaoFluxoTest extends TestCase
         $this->assertDatabaseHas('inscricoes', [
             'feira_id' => $feira->id,
             'professor_id' => $aluno->id,
-            'turma' => null,
-            'estado' => 'pendente',
-        ]);
-
-        Notification::assertSentTo($comissao, NovaInscricaoSubmetida::class);
-    }
-
-    public function test_aluno_com_turma_direta_na_conta_submete_sem_depender_de_professor(): void
-    {
-        Notification::fake();
-
-        $feira = Feira::factory()->publicada()->create();
-        $aluno = $this->criarAluno(['turma' => '10B']);
-        $comissao = $this->criarComissao();
-
-        $response = $this->actingAs($aluno)->post('/professor/inscricoes', [
-            'tipo_participante' => 'aluno',
-            'telefone' => '841234567',
-            'email' => 'aluno@teste.local',
-            'tipo_atividade' => 'poesia',
-            'numero_participantes' => 1,
-        ]);
-
-        $response->assertRedirect('/professor/inscricoes');
-        $this->assertDatabaseHas('inscricoes', [
-            'feira_id' => $feira->id,
-            'professor_id' => $aluno->id,
+            'classe' => '10ª',
             'turma' => '10B',
             'estado' => 'pendente',
         ]);

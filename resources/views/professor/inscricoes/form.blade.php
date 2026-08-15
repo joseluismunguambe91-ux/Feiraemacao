@@ -24,18 +24,29 @@
 
     @if (auth()->user()->hasRole('aluno'))
         <input type="hidden" name="tipo_participante" value="aluno">
-        @php
-            $classeAtual = auth()->user()->alunoLigado?->classe ?? auth()->user()->classe;
-            $turmaAtual = auth()->user()->alunoLigado?->turma ?? auth()->user()->turma;
-        @endphp
+        <h2 class="h6 text-uppercase text-body-secondary mt-4">Quem és tu?</h2>
         <div class="alert alert-info small">
-            Estás a inscrever-te como <strong>{{ auth()->user()->alunoLigado?->nome ?? auth()->user()->name }}</strong>
-            @if ($classeAtual || $turmaAtual)
-                ({{ $classeAtual ? $classeAtual.' classe, ' : '' }}turma {{ $turmaAtual }}).
-            @else
-                .
-            @endif
+            Estás a inscrever-te como <strong>{{ auth()->user()->alunoLigado?->nome ?? auth()->user()->name }}</strong>.
         </div>
+        @if (auth()->user()->alunoLigado)
+            <div class="alert alert-info small">
+                A tua turma: <strong>{{ auth()->user()->alunoLigado->classe ? auth()->user()->alunoLigado->classe.' classe, ' : '' }}turma {{ auth()->user()->alunoLigado->turma }}</strong>
+                — já registada pelo teu professor.
+            </div>
+        @else
+            <div class="row g-3 mb-3">
+                <div class="col-6">
+                    <label for="classe" class="form-label">A tua classe <span class="text-body-secondary">(ex.: 9ª)</span></label>
+                    <input id="classe" name="classe" class="form-control @error('classe') is-invalid @enderror" value="{{ old('classe', $inscricao->classe ?? auth()->user()->classe) }}">
+                    @error('classe')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
+                <div class="col-6">
+                    <label for="turma" class="form-label">A tua turma <span class="text-body-secondary">(ex.: C)</span></label>
+                    <input id="turma" name="turma" class="form-control @error('turma') is-invalid @enderror" value="{{ old('turma', $inscricao->turma ?? auth()->user()->turma) }}" required>
+                    @error('turma')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
+            </div>
+        @endif
     @else
         <h2 class="h6 text-uppercase text-body-secondary mt-4">Em nome de quem é esta inscrição?</h2>
         <div class="mb-3">

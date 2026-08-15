@@ -181,7 +181,15 @@ class InscricaoController extends Controller
         }
 
         if ($request->user()->hasRole('aluno')) {
-            return [$request->user()->classe, $request->user()->turma];
+            $alunoLigado = $request->user()->alunoLigado;
+            if ($alunoLigado) {
+                return [$alunoLigado->classe, $alunoLigado->turma];
+            }
+
+            // Sem plantel de um Professor: o próprio aluno escreveu a
+            // turma/classe agora mesmo, no formulário (InscricaoRequest
+            // exige a turma neste caso).
+            return [$request->input('classe'), $request->input('turma')];
         }
 
         return [null, null];

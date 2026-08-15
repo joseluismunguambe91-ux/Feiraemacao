@@ -21,14 +21,19 @@ class InscricaoRequest extends FormRequest
     {
         return [
             'tipo_participante' => ['required', Rule::in(['professor', 'aluno'])],
-            // Quando é o próprio Professor a participar (ex.: gastronomia
-            // em nome dele), a turma continua a ser escrita à mão. Quando é
-            // em nome de Aluno(s), a turma vem sempre do registo do Aluno
-            // escolhido (Controller) — nunca digitada aqui.
+            // Obrigatória quando: (a) é o próprio Professor a participar em
+            // gastronomia, ou (b) é um Aluno a inscrever-se sozinho sem ter
+            // um registo de plantel gerido por um Professor — nesse caso
+            // escreve a turma aqui mesmo, no momento da inscrição (pedido
+            // pós-Etapa 10: não deve depender de mais ninguém). Quando o
+            // Professor escolhe Aluno(s) do seu plantel, ou quando o Aluno
+            // já tem um registo ligado (alunoLigado), a turma vem de lá e
+            // este campo é ignorado (Controller).
             'turma' => [
-                $this->input('tipo_participante') === 'professor' && $this->input('tipo_atividade') === 'gastronomia' ? 'required' : 'nullable',
+                $this->deveIndicarTurma() ? 'required' : 'nullable',
                 'string', 'max:50',
             ],
+            'classe' => ['nullable', 'string', 'max:20'],
             // Só exigido quando é um Professor a inscrever em nome de
             // Aluno(s) — cada um tem de pertencer ao plantel do próprio
             // Professor (RF04). Quando é o Aluno a inscrever-se a si
@@ -66,12 +71,24 @@ class InscricaoRequest extends FormRequest
         ];
     }
 
+    private function deveIndicarTurma(): bool
+    {
+        if ($this->input('tipo_participante') === 'professor') {
+            return $this->input('tipo_atividade') === 'gastronomia';
+        }
+
+        $user = $this->user();
+
+        return $user?->hasRole('aluno') && ! $user->alunoLigado;
+    }
+
     /** Nomes amigáveis nas mensagens de erro — o formulário é pensado para crianças preencherem sozinhas. */
     public function attributes(): array
     {
         return [
             'tipo_participante' => 'quem vai participar',
             'turma' => 'turma',
+            'classe' => 'classe',
             'alunos' => 'aluno(s)',
             'telefone' => 'número de telefone',
             'email' => 'email',
