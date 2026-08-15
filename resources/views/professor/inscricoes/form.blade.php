@@ -127,6 +127,10 @@
 
     <div data-secao="gastronomia">
         <h2 class="h6 text-uppercase text-body-secondary mt-4">O teu prato</h2>
+        <p class="form-text mt-0">
+            <strong>Dica:</strong> uma foto bonita e um preço justo fazem toda a diferença —
+            é o que mais chama a atenção das pessoas e ajuda a vender muito mais na feira!
+        </p>
         <div class="row g-3 mb-3">
             <div class="col-8">
                 <label for="produto_nome" class="form-label">Nome do prato</label>
